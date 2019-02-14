@@ -2,24 +2,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const body = document.querySelector("body");
 
   function login() {
-
-    const landing = document.querySelector(".landing");
-
-    landing.addEventListener("click", event => {
-
-      event.preventDefault();
-      if(event.target.classList.contains("btn")) {
-        setTimeout(()=> {
-          flip();
-          setTimeout(() => {
-            loggedIn();
-          },300) // change to 2000 later
-        },300) // change to 500 later
-      }
-    })
+    setTimeout(()=> {
+      flip();
+      setTimeout(() => {
+        loggedIn();
+      },2000) // change to 2000 later
+    },500) // change to 500 later
   }
-
-
 
   function flip() {
     body.innerHTML =
@@ -110,6 +99,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const name = event.target.parentNode.querySelector(".foodName").innerText;
         const image = event.target.parentNode.querySelector(".foodImg").src;
         const id = event.target.parentNode.dataset.id;
+        fetch("http://localhost:3000/api/v1/wishlists", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({
+            product_id: id,
+            user_id: 1
+          })
+        })
+        // .then(res => res.json())
+        .then(
         craving.innerHTML += `
         <div class="foodCard appendToFrontContainer" data-id="${id}">
           <li class="foodName">${name}</li>
@@ -117,36 +116,49 @@ document.addEventListener("DOMContentLoaded", () => {
           <br>
           <button class="addFood btn btn-primary">Add</button>
          </div>
-        `
+        `)
       }
     })
   }
 
-  function createUser() {
-    // const signup = document.querySelector(".signup");
+  function loginSignup() {
     const button = document.querySelector(".button");
-    // const landing = document.querySelector(".landing")
-    button.addEventListener("click", ()=> {
-      // debugger
-      const signup = document.querySelector(".signup");
-      // console.log(signup.value)
-      fetch("http://localhost:3000/api/v1/users", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-          name: signup.value
-        })
-      })
-      .then(res => res.json())
-      .then(console.log("made person"))
+    button.addEventListener("click", event => {
+      event.preventDefault()
+      const userValue = document.querySelector(".login").value;
+      const signup = document.querySelector(".signup").value;
+      if(userValue.length > 0) {
+        checkUser()
+      }else if(signup.length > 0) {
+        createUser()
+      }
     })
   }
+  loginSignup()
 
+  function createUser() {
+    const signup = document.querySelector(".signup");
+    fetch("http://localhost:3000/api/v1/users", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        name: signup.value
+      })
+    })
+    .then(login())
+  }
 
-
-
-
-  login()
-  createUser()
-
+  function checkUser(){
+    const userValue = document.querySelector(".login").value;
+    fetch("http://localhost:3000/api/v1/users")
+    .then(res => res.json())
+    .then(users => {
+      let foundUser = users.find(user => user.name === userValue)
+      if(foundUser) {
+        login()
+      } else {
+        alert("User Doesn't Exist. Please Sign Up Or Log In Again")
+      }
+    })
+  }
 })
