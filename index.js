@@ -2,19 +2,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const body = document.querySelector("body");
 
   function login() {
+
     const landing = document.querySelector(".landing");
+
     landing.addEventListener("click", event => {
+
       event.preventDefault();
       if(event.target.classList.contains("btn")) {
         setTimeout(()=> {
           flip();
           setTimeout(() => {
             loggedIn();
-          },1500) // change to 2000 later
-        },500) // change to 500 later
+          },300) // change to 2000 later
+        },300) // change to 500 later
       }
     })
   }
+
+
 
   function flip() {
     body.innerHTML =
@@ -46,11 +51,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       </div>
       <div class="front_container">
-        <div class="craving">Cravings <span class="clickMe"><- Click Me!</span></div>
-        <div class="foods">Foods</div>
+        <div class="craving">Cravings
+        <span class="clickMe"><- Click Me!</span>
+        <div class="inner-craving"></div>
+        </div>
+        <div class="foods">Foods
+          <div class="grid-container"></div>
+        </div>
       </div>
     `
     addCraving()
+    slapFoodToDOM()
   }
 
   function addCraving() {
@@ -70,5 +81,72 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   }
 
+  function slapFoodToDOM() {
+    const foodsDIV = document.querySelector(".grid-container");
+    fetch("http://localhost:3000/api/v1/products")
+    .then(res => res.json())
+    .then(foods => {
+      foods.forEach(food => {
+        foodsDIV.innerHTML +=
+        `<div class="foodCard" data-id="${food.id}">
+          <li class="foodName">${food.name}</li>
+          <img class="foodImg" src= ${food.images}>
+          <br>
+          <button class="addFood btn btn-primary">Add</button>
+         </div>
+        `
+      })
+      addEventListenerToFoodCard()
+    })
+  }
+
+  function addEventListenerToFoodCard(event){
+    const foodCard = document.querySelector(".grid-container")
+    const craving = document.querySelector(".inner-craving")
+    foodCard.addEventListener("click", event =>{
+      event.preventDefault()
+      // console.log(event.target.parentNode)
+      if (event.target.classList.contains("addFood")){
+        const name = event.target.parentNode.querySelector(".foodName").innerText;
+        const image = event.target.parentNode.querySelector(".foodImg").src;
+        const id = event.target.parentNode.dataset.id;
+        craving.innerHTML += `
+        <div class="foodCard appendToFrontContainer" data-id="${id}">
+          <li class="foodName">${name}</li>
+          <img src= ${image}>
+          <br>
+          <button class="addFood btn btn-primary">Add</button>
+         </div>
+        `
+      }
+    })
+  }
+
+  function createUser() {
+    // const signup = document.querySelector(".signup");
+    const button = document.querySelector(".button");
+    // const landing = document.querySelector(".landing")
+    button.addEventListener("click", ()=> {
+      // debugger
+      const signup = document.querySelector(".signup");
+      // console.log(signup.value)
+      fetch("http://localhost:3000/api/v1/users", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          name: signup.value
+        })
+      })
+      .then(res => res.json())
+      .then(console.log("made person"))
+    })
+  }
+
+
+
+
+
   login()
+  createUser()
+
 })

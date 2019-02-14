@@ -125,7 +125,7 @@ transform: rotateY(180deg);
   letter-spacing: 5px;
   border-radius: 5px;
   font-family: 'Caveat', cursive;
-
+  margin-top: 50px;
 }
 
 /* Toy tale inspiration */
@@ -144,4 +144,44 @@ transform: rotateY(180deg);
   color: #bddfeb;
   letter-spacing: 5px;
   font-family: 'Caveat', cursive;
+}
+
+.foodName {
+  color: black;
+  list-style: none;
+}
+
+.appendToFrontContainer {
+  color: purple;
+}
+
+.foodCard {
+  border: 1px solid #bddfeb;
+  width: 80%;
+  margin-top: 20px;
+  justify-self: center;
+  padding: 20px;
+  border-radius: 5%;
+  box-shadow: 2px 2px #7997a1;
+
+}
+
+.foodImg {
+  /* width: 80%; */
+}
+
+.foodName {
+  font-size: 24px;
+  color: #7997a1;
+  padding: 5px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.inner-craving {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
 }
