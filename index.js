@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const body = document.querySelector("body");
-
+  let userID;
   function login() {
     setTimeout(()=> {
       flip();
@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
           headers: {"Content-Type": "application/json"},
           body: JSON.stringify({
             product_id: id,
-            user_id: 1
+            user_id: userID
           })
         })
         // .then(res => res.json())
@@ -154,6 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(res => res.json())
     .then(users => {
       let foundUser = users.find(user => user.name === userValue)
+      userID = foundUser.id
       if(foundUser) {
         login()
       } else {
