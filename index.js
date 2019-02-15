@@ -97,8 +97,16 @@ document.addEventListener("DOMContentLoaded", () => {
     fetch(`http://localhost:3000/api/v1/users/${userID}`)
     .then(res => res.json())
     .then(user => {
-      user.wishlists.forEach(wishlist => {
-        innerCraving.innerHTML += `<li class="test">${wishlist.product_id}</li>`
+      // debugger
+      user.products.forEach(food => {
+        innerCraving.innerHTML += `
+        <div class="foodCard" data-id="${food.id}">
+        <li class="foodName">${food.name}</li>
+        <img src="${food.images}"></li>
+        <br>
+        <button class="addFood btn btn-primary">Remove</button>
+        </div>
+        `
       })
     })
   }
