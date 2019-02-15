@@ -71,10 +71,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function slapFoodToDOM() {
-    const foodsDIV = document.querySelector(".grid-container");
     fetch("http://localhost:3000/api/v1/products")
     .then(res => res.json())
-    .then(foods => {
+    .then(foods => rendering(foods))
+  }
+
+    function rendering(foods){
+      const foodsDIV = document.querySelector(".grid-container");
       foods.forEach(food => {
         foodsDIV.innerHTML +=
         `<div class="foodCard" data-id="${food.id}">
@@ -86,6 +89,17 @@ document.addEventListener("DOMContentLoaded", () => {
         `
       })
       addEventListenerToFoodCard()
+      showUserCravings()
+    }
+
+  function showUserCravings(foods){
+    const innerCraving = document.querySelector(".inner-craving")
+    fetch(`http://localhost:3000/api/v1/users/${userID}`)
+    .then(res => res.json())
+    .then(user => {
+      user.wishlists.forEach(wishlist => {
+        innerCraving.innerHTML += `<li class="test">${wishlist.product_id}</li>`
+      })
     })
   }
 
